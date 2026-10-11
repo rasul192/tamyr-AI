@@ -4,7 +4,6 @@ Resolves microstructural decay along the wall depth x in [0, L].
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 def solve_1d_boundary_layer(
@@ -82,6 +81,7 @@ def solve_1d_boundary_layer(
 
 def plot_damage_depth_profile(x, D):
     """Строит эпюру деградации по толщине стены по годам."""
+    import matplotlib.pyplot as plt
     plt.rcParams.update({'font.sans-serif': 'DejaVu Sans', 'font.size': 9})
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 3.8), dpi=300)
 
