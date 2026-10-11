@@ -20,46 +20,17 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-        cache: 'pip'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install numpy matplotlib pytest
-        pip install -r requirements.txt
-        pip install pytest
 
     - name: Run Thermodynamic Unit Tests
       run: |
         pytest tests/ -v
 
-    - name: Verify Full Reproduction Pipeline
-      run: |
-        python src/tamyr_ablation_study.py
-        python src/tamyr_vtk_export.py
-        python src/tamyr_pde_boundary_layer.py
-    - name: Verify Core Simulation Scripts
-      run: |
-        python src/tamyr_pde_boundary_layer.py
-        python src/tamyr_vtk_export.py
-        python src/tamyr_ablation_study.py
-        python src/tamyr_intervention_sim.py
-    - name: Verify Core Simulation Scripts
-      run: |
-        python src/tamyr_pde_boundary_layer.py
-        python src/tamyr_vtk_export.py
-        python src/tamyr_ablation_study.py
-        python src/tamyr_intervention_sim.py
-        python src/tamyr_multisite_otrar.py
-    - name: Verify Core Simulation Scripts
-      run: |
-        python src/tamyr_pde_boundary_layer.py
-        python src/tamyr_vtk_export.py
-        python src/tamyr_ablation_study.py
-        python src/tamyr_intervention_sim.py
-        python src/tamyr_multisite_otrar.py
-        python src/tamyr_monte_carlo_uq.py        
-    - name: Verify Core Simulation Scripts
+    - name: Run Individual Module Benchmarks & Plot Generation
       run: |
         python src/tamyr_pde_boundary_layer.py
         python src/tamyr_vtk_export.py
@@ -67,5 +38,8 @@ jobs:
         python src/tamyr_intervention_sim.py
         python src/tamyr_multisite_otrar.py
         python src/tamyr_monte_carlo_uq.py
-        python src/tamyr_data_assimilation_ekf.py    
-        
+        python src/tamyr_data_assimilation_ekf.py
+
+    - name: Verify Full Pipeline Orchestration
+      run: |
+        python run_pipeline.py
