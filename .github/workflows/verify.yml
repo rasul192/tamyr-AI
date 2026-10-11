@@ -38,3 +38,11 @@ jobs:
         python src/tamyr_ablation_study.py
         python src/tamyr_vtk_export.py
         python src/tamyr_pde_boundary_layer.py
+    - name: Verify Core Simulation Scripts
+      run: |
+        python src/tamyr_pde_boundary_layer.py
+        python src/tamyr_vtk_export.py
+        python src/tamyr_ablation_study.py
+        python src/tamyr_intervention_sim.py
+        
+        
