@@ -1,0 +1,37 @@
+name: Tamyr AI Verification Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest
+
+    - name: Run Thermodynamic Unit Tests
+      run: |
+        pytest tests/ -v
+
+    - name: Verify Full Reproduction Pipeline
+      run: |
+        python generate_paper_plots.py
+        python src/tamyr_ablation_study.py
+        python src/tamyr_vtk_export.py
