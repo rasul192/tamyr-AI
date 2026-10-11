@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: .
 
     steps:
     - name: Check out repository
@@ -32,6 +34,6 @@ jobs:
 
     - name: Verify Full Reproduction Pipeline
       run: |
-        python generate_paper_plots.py
         python src/tamyr_ablation_study.py
         python src/tamyr_vtk_export.py
+        python src/tamyr_pde_boundary_layer.py
