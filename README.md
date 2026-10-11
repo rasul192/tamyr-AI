@@ -1,3 +1,4 @@
+[![Tamyr AI Verification Pipeline](https://github.com/rasul192/tamyr-AI/actions/workflows/verify.yml/badge.svg)](https://github.com/rasul192/tamyr-AI/actions/workflows/verify.yml)
 # Tamyr AI: Physics-Informed Predictive Preservation Engine (v2.0)
 
 Платформа предиктивного анализа и мониторинга объектов культурного наследия Южного Казахстана на основе механики сплошных сред (Continuum Damage Mechanics).
