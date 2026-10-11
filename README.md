@@ -5,33 +5,36 @@
 [![Python: 3.11](https://img.shields.io/badge/Python-3.11-brightgreen.svg)]()
 [![UNESCO Benchmark](https://img.shields.io/badge/UNESCO-Ref.1103_Validated-success.svg)]()
 
-**Tamyr AI** is a computational physics platform designed for continuous microstructural health monitoring and predictive conservation of Silk Road monumental architecture. Focused on the XIV-century **Mausoleum of Khoja Ahmed Yasavi (Turkestan, Kazakhstan; UNESCO World Heritage Ref. 1103)**, the engine bridges non-linear Continuum Damage Mechanics (CDM), multi-hazard microclimate forcing, stochastic Monte Carlo bounds, and real-time Non-Destructive Testing (NDT) data assimilation.
+**Tamyr AI** is a computational physics platform designed for continuous microstructural health monitoring and predictive conservation of monumental masonry along the historical Silk Road. 
+
+Calibrated and benchmarked against the XIV-century **Mausoleum of Khoja Ahmed Yasavi (Turkestan, Kazakhstan; UNESCO World Heritage Ref. 1103)**, the engine bridges non-linear Continuum Damage Mechanics (CDM), multi-hazard microclimate boundary layers, stochastic Monte Carlo bounds, and real-time Non-Destructive Testing (NDT) acoustic data assimilation.
 
 ---
 
 ## 1. Mathematical & Constitutive Formulation
 
 ### 1.1 Non-Linear Continuum Damage Mechanics (Kachanov-Lemaitre)
-Microcrack nucleation and subflorescence fatigue are governed by the non-linear kinetic rate law:
+Microcrack nucleation and subflorescence fatigue are governed by the coupled kinetic rate law:
 $$\frac{dD}{dt} = \frac{1}{\tau_m (1 - D)^n} \sum_{i \in \mathcal{K}} w_i S_i(t), \quad D \in [0, D_{\mathrm{crit}}]$$
 where:
-* $D(t) \in [0, 1]$ represents the scalar isotropic damage variable.
-* $n = 1.50$ captures localized microstructural void coalescence under cyclical strain.
-* $\tau_m$ represents the intrinsic material relaxation time ($\tau_m = 18,250\text{ days} \approx 50\text{ years}$ for fired ceramic brick).
-* $\sum w_i = 1.0$ parameterizes the weighted hazard dissipation across thermal ($w_{\mathrm{th}}$), cryofracture ($w_{\mathrm{cryo}}$), salt crystallization ($w_{\mathrm{salt}}$), and aeolian fatigue ($w_{\mathrm{wind}}$).
+* $D(t) \in [0, 1]$ is the scalar isotropic damage state variable.
+* $n = 1.50$ accounts for progressive void coalescence and microcrack acceleration under non-linear strain.
+* $\tau_m$ is the intrinsic material relaxation time ($\tau_m = 18,250\text{ days} \approx 50\text{ years}$ for medieval fired ceramic brick; $\tau_m = 3,100\text{ days} \approx 8.5\text{ years}$ for unburnt sun-dried mudbrick).
+* $\sum_{i} w_i = 1.0$ weights environmental dissipation across thermal cycling ($w_{\mathrm{th}}$), cryofracture freeze-thaw ($w_{\mathrm{cryo}}$), salt crystallization subflorescence ($w_{\mathrm{salt}}$), and aeolian fatigue ($w_{\mathrm{wind}}$).
 
-### 1.2 Boundary-Layer Penetration PDE (1D Depth Dispersion)
+### 1.2 Boundary-Layer Penetration PDE (1D Spatial Depth Dispersion)
 Thermal extremes and salt subflorescence crystallize primarily within the outer boundary layer ($x \le 8\text{--}10\text{ cm}$):
-$$\frac{\partial D(x, t)}{\partial t} = \frac{1}{\tau_m (1 - D(x, t))^n} \left[ w_{\mathrm{salt}} S_{\mathrm{salt}}(x, t) + w_{\mathrm{th}} S_{\mathrm{th}}(x, t) + \dots \right]$$
-Effective Young's modulus spatially degrades into the wall core according to:
+$$\frac{\partial D(x, t)}{\partial t} = \frac{1}{\tau_m (1 - D(x, t))^n} \left[ w_{\mathrm{salt}} S_{\mathrm{salt}}(x, t) + w_{\mathrm{th}} S_{\mathrm{th}}(x, t) + w_{\mathrm{cryo}} S_{\mathrm{cryo}}(x, t) \right]$$
+Effective Young's modulus degrades into the wall core according to:
 $$\tilde{E}(x, y, z) = E_0 \cdot (1 - D(x, y, z))$$
 
-### 1.3 Aeolian Abrasion via Bagnold Saltation Law (Otrar Adobe Benchmark)
-For unburnt sun-dried mudbrick (*pakhsa*), kinetic erosion follows cubic excess shear velocity:
+### 1.3 Aeolian Abrasion via Bagnold Saltation Law (Otrar Citadel Benchmark)
+For unburnt sun-dried adobe and rammed earth (*pakhsa*), kinetic erosion follows cubic excess shear velocity above saltation threshold:
 $$q_{\mathrm{sand}} \propto \max(0, U - U_{\mathrm{th}})^3, \quad U_{\mathrm{th}} \approx 6.5\text{ m/s}$$
 
-### 1.4 Extended Kalman Filter (EKF) Sensor Fusion
-Non-destructive Ultrasonic Pulse Velocity (UPV) measurements $V_p = V_0 \sqrt{1 - D} + \mathcal{N}(0, \sigma^2)$ are continuously assimilated to eliminate parameter drift.
+### 1.4 Extended Kalman Filter (EKF) Sensor Assimilation
+Field Non-Destructive Testing (NDT) acoustic measurements are assimilated to eliminate parameter drift using Ultrasonic Pulse Velocity (UPV):
+$$V_p(D) = V_{p,0} \sqrt{1 - D} + \mathcal{N}(0, \sigma^2)$$
 
 ---
 
@@ -41,7 +44,7 @@ Non-destructive Ultrasonic Pulse Velocity (UPV) measurements $V_p = V_0 \sqrt{1 
 tamyr-AI/
 ├── .github/
 │   └── workflows/
-│       └── verify.yml                   # Automated CI/CD execution pipeline
+│       └── verify.yml                   # Automated CI/CD test and execution pipeline
 ├── src/
 │   ├── tamyr_pde_boundary_layer.py     # 1D Boundary layer depth PDE solver
 │   ├── tamyr_vtk_export.py             # 3D Structured mesh generator for ParaView / FE
@@ -52,15 +55,16 @@ tamyr-AI/
 │   └── tamyr_data_assimilation_ekf.py  # Extended Kalman filter NDT acoustic fusion
 ├── tests/
 │   └── test_physics.py                 # Thermodynamic & mathematical unit tests
-├── run_pipeline.py                     # Master execution orchestrator
-├── requirements.txt                    # Python runtime dependencies
+├── run_pipeline.py                     # Master execution orchestrator & JSON auditor
+├── requirements.txt                    # Runtime dependencies
 └── LICENSE                             # Open-source MIT License
 ```
+
 ---
 
 ## 3. UNESCO SOC Validation & Ablation Benchmark
 
-Ablation analysis against the **UNESCO State of Conservation (SOC 2020–2025)** field survey points ($D_{2020} = 0.180$, $D_{2025} = 0.320 \pm 0.050$):
+Ablation analysis benchmarked against field observations from the **UNESCO State of Conservation (SOC 2020–2025)** reports ($D_{2020} = 0.180$, $D_{2025} = 0.320 \pm 0.050$):
 
 | Constitutive Model Variant | Constitutive Exponent | Salt Subflorescence | Final $D(2025)$ | MAE Residual | Error vs Target |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -79,17 +83,40 @@ Ablation analysis against the **UNESCO State of Conservation (SOC 2020–2025)**
 
 ---
 
-## 5. Quickstart & Master Execution
+## 5. Quickstart & Execution
 
-Execute the entire 7-stage computational pipeline with automated JSON audit export:
+### 5.1 Installation & Master Pipeline
+Clone the repository, install standard scientific Python libraries, and execute the full computational suite:
 
 ```bash
-# Clone the repository
+# Clone repository
 git clone [https://github.com/rasul192/tamyr-AI.git](https://github.com/rasul192/tamyr-AI.git)
 cd tamyr-AI
 
 # Install dependencies
 pip install numpy matplotlib pytest
 
-# Run master execution pipeline
+# Run master pipeline and generate JSON audit report
 python run_pipeline.py
+```
+
+The script runs all constitutive solvers and exports structured audit metrics into `tamyr_executive_summary.json`.
+
+### 5.2 Visualizing 3D Degraded Elasticity in ParaView
+1. Launch **ParaView**.
+2. Open `tamyr_masonry_damage_2025.vtk`.
+3. Click **Apply** in the Properties panel.
+4. Set coloring array to `Degraded_E_GPa` or `Damage_D`.
+5. Apply a **Clip filter** perpendicular to the $X$-axis to examine internal boundary-layer damage decay.
+
+---
+
+## 6. Scientific References
+
+* **UNESCO State of Conservation Reports (2020–2025):** Property Ref. 1103 (*Mausoleum of Khoja Ahmed Yasavi*).
+* **ICOMOS / ISCARSAH Guidelines:** Recommendations for the analysis, conservation, and structural restoration of architectural heritage.
+* **Lemaitre, J. (1985):** *A Continuous Damage Mechanics Model for Ductile Fracture*, J. Eng. Mater. Technol., 107(1), 83–89.
+* **Bagnold, R. A. (1941):** *The Physics of Blown Sand and Desert Dunes*, Methuen, London.
+
+---
+**License:** MIT Open Source — Developed for Heritage Preservation & Engineering Research.
