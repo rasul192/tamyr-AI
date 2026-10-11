@@ -46,20 +46,29 @@ tamyr-AI/
 │   └── workflows/
 │       └── verify.yml                   # Automated CI/CD test and execution pipeline
 ├── src/
-│   ├── tamyr_pde_boundary_layer.py     # 1D Boundary layer depth PDE solver
-│   ├── tamyr_vtk_export.py             # 3D Structured mesh generator for ParaView / FE
+│   ├── __init__.py                     # Core package initialization
 │   ├── tamyr_ablation_study.py         # Physics ablation benchmark (MAE vs UNESCO)
+│   ├── tamyr_calibration.py            # Constitutive parameter calibration core
+│   ├── tamyr_data_assimilation_ekf.py  # Extended Kalman filter NDT acoustic fusion
+│   ├── tamyr_facade_microclimate.py    # Facade orientation solar radiation model
+│   ├── tamyr_integrator.py             # Multi-hazard numerical damage integrator
 │   ├── tamyr_intervention_sim.py       # ICOMOS prescriptive poultice maintenance
-│   ├── tamyr_multisite_otrar.py        # Cross-site Bagnold abrasion solver (Otrar)
 │   ├── tamyr_monte_carlo_uq.py         # Stochastic Monte Carlo uncertainty (N=500)
-│   └── tamyr_data_assimilation_ekf.py  # Extended Kalman filter NDT acoustic fusion
+│   ├── tamyr_multisite_otrar.py        # Cross-site Bagnold abrasion solver (Otrar)
+│   ├── tamyr_pde_boundary_layer.py     # 1D Boundary layer depth PDE solver
+│   ├── tamyr_physics_step.py           # Kachanov-Lemaitre constitutive rate step
+│   ├── tamyr_pipeline_integration.py   # Multi-module pipeline coupling runner
+│   ├── tamyr_prescriptive_engine.py    # Structural health decision-support engine
+│   └── tamyr_vtk_export.py             # 3D Structured mesh generator for ParaView / FE
 ├── tests/
 │   └── test_physics.py                 # Thermodynamic & mathematical unit tests
+├── generate_paper_plots.py             # Publication figure generation suite
 ├── run_pipeline.py                     # Master execution orchestrator & JSON auditor
+├── run_verification.py                 # Comprehensive verification benchmark
 ├── requirements.txt                    # Runtime dependencies
+├── .gitignore                          # Git tracking exclusion rules
 └── LICENSE                             # Open-source MIT License
 ```
-
 ---
 
 ## 3. UNESCO SOC Validation & Ablation Benchmark
