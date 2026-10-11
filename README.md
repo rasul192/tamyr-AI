@@ -36,6 +36,8 @@ Non-destructive Ultrasonic Pulse Velocity (UPV) measurements $V_p = V_0 \sqrt{1 
 ---
 
 ## 2. Core Repository Architecture
+
+```text
 tamyr-AI/
 ├── .github/
 │   └── workflows/
@@ -53,8 +55,7 @@ tamyr-AI/
 ├── run_pipeline.py                     # Master execution orchestrator
 ├── requirements.txt                    # Python runtime dependencies
 └── LICENSE                             # Open-source MIT License
-
-
+```
 ---
 
 ## 3. UNESCO SOC Validation & Ablation Benchmark
